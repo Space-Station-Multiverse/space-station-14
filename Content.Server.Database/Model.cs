@@ -184,6 +184,9 @@ namespace Content.Server.Database
             modelBuilder.Entity<Player>()
                 .HasIndex(p => p.LastSeenUserName);
 
+            modelBuilder.Entity<Player>()
+                .HasIndex(p => p.PublicKey);
+
             modelBuilder.Entity<ConnectionLog>()
                 .HasIndex(p => p.UserId);
 
@@ -509,6 +512,7 @@ namespace Content.Server.Database
         // Permanent data
         public Guid UserId { get; set; }
         public DateTime FirstSeenTime { get; set; }
+        public byte[]? PublicKey { get; set; }
 
         // Data that gets updated on each join.
         public string LastSeenUserName { get; set; } = null!;
@@ -865,6 +869,7 @@ namespace Content.Server.Database
 
         public IPAddress Address { get; set; } = null!;
         public byte[]? HWId { get; set; }
+        public byte[]? PublicKey { get; set; }
 
         public ConnectionDenyReason? Denied { get; set; }
 
