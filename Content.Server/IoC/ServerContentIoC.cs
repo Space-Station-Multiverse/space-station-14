@@ -66,6 +66,7 @@ namespace Content.Server.IoC
             IoCManager.Register<ServerApi>();
             IoCManager.Register<JobWhitelistManager>();
             IoCManager.Register<IServerUserDataAssociation, UserDataAssociation>();
+            IoCManager.Register<MVKeyAuthUtilities>();
         }
     }
 }
