@@ -187,6 +187,7 @@ namespace Content.Server.Database
         Task<PlayerRecord?> GetPlayerRecordByPublicKey(ImmutableArray<byte> publicKey, CancellationToken cancel = default);
         Task<List<PlayerRecord>> GetAllPlayerRecordsWithPublicKey(ImmutableArray<byte> publicKey, CancellationToken cancel = default);
         Task<PlayerRecord?> GetPlayerRecordByHWID(ImmutableArray<byte> hwID, CancellationToken cancel = default);
+        Task<int> GetCountOfRecentlyUsedPlayerRecordsWithPublicKeyFromIP(IPAddress address, float daysToConsider, CancellationToken cancel = default);
         #endregion
 
         #region Connection Logs
@@ -567,6 +568,14 @@ namespace Content.Server.Database
         {
             DbReadOpsMetric.Inc();
             return RunDbCommand(() => _db.GetPlayerRecordByHWID(hwID, cancel));
+        }
+
+        public Task<int> GetCountOfRecentlyUsedPlayerRecordsWithPublicKeyFromIP(IPAddress address, float daysToConsider,
+            CancellationToken cancel = default)
+        {
+            DbReadOpsMetric.Inc();
+            return RunDbCommand(() => _db.GetCountOfRecentlyUsedPlayerRecordsWithPublicKeyFromIP(address,
+                daysToConsider, cancel));
         }
 
         public Task<int> AddConnectionLogAsync(
