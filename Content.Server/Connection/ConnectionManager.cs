@@ -50,6 +50,7 @@ namespace Content.Server.Connection
         [Dependency] private readonly ServerDbEntryManager _serverDbEntry = default!;
         [Dependency] private readonly IGameTiming _gameTiming = default!;
         [Dependency] private readonly ILogManager _logManager = default!;
+        [Dependency] private readonly IIPInformation _ipInformation = default!;
 
         private readonly Dictionary<NetUserId, TimeSpan> _temporaryBypasses = [];
         private ISawmill _sawmill = default!;
@@ -240,6 +241,36 @@ namespace Content.Server.Connection
                     if (min > 0 || max < int.MaxValue)
                         msg += "\n" + Loc.GetString("whitelist-playercount-invalid", ("min", min), ("max", max));
                     return (ConnectionDenyReason.Whitelist, msg, null);
+                }
+            }
+
+            // VPN Block
+            if (_cfg.GetCVar(CCVars.VPNBlockEnabled) && adminData == null)
+            {
+                // Allow skip if whitelisted
+                var whitelisted = await _db.GetWhitelistStatusAsync(userId);
+                if (!whitelisted)
+                {
+                    // Allow skip if meet overall time
+                    var overallTime = ( await _db.GetPlayTimes(e.UserId)).Find(p => p.Tracker == PlayTimeTrackingShared.TrackerOverall);
+                    var meetMinOverallTimeSkip = overallTime != null && overallTime.TimeSpent.TotalHours >= _cfg.GetCVar(CCVars.VPNBlockSkipWithMinOverallHours);
+
+                    if (!meetMinOverallTimeSkip)
+                    {
+                        // Check IP
+                        try
+                        {
+                            var ipResult = await _ipInformation.GetIPInformationAsync(e.IP.Address);
+                            _sawmill.Debug("Connection from IP is suspicious level: " + ipResult.suspiciousScore);
+
+                            if (ipResult.suspiciousIP)
+                            {
+                                return (ConnectionDenyReason.VPN, "VPN BLOCKED\nHello, it appears you are connecting from a VPN and this server currently blocks VPN connections.  Please use a\nresidential/home IP.  You may also request a whitelist from server staff via the website if you have a good record\non another server or well established furry profile.\nhttps://blepstation.com/", null); // I don't know how to get newlines working in FTL/loc
+                            }
+                        } catch (Exception exception) {
+                            _sawmill.Error("Caught VPN Block exception", exception);
+                        }
+                    }
                 }
             }
 
