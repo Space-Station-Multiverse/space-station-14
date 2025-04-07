@@ -53,7 +53,7 @@ internal sealed class TouchUserCommand : IConsoleCommand
             sourceUsernameLookupRecord.UserId,
             sourceUsernameLookupRecord.LastSeenUserName,
             sourceUsernameLookupRecord.LastSeenAddress,
-            sourceUsernameLookupRecord.HWId ?? ImmutableArray<byte>.Empty,
+            sourceUsernameLookupRecord.HWId ?? null,
             sourceUsernameLookupRecord.PublicKey ?? ImmutableArray<byte>.Empty);
 
         shell.WriteLine("Done.");

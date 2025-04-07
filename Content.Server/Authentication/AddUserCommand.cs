@@ -94,7 +94,7 @@ internal sealed class AddUserCommand : IConsoleCommand
 
         // Add user entry to DB
         var userId = new NetUserId(Guid.NewGuid());
-        await _db.UpdatePlayerRecordAsync(userId, newUserName, IPAddress.None, ImmutableArray<byte>.Empty, keyBytes.Value);
+        await _db.UpdatePlayerRecordAsync(userId, newUserName, IPAddress.None, null, keyBytes.Value);
 
         shell.WriteLine("User entry added.");
     }

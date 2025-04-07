@@ -121,7 +121,7 @@ public sealed record PlayerRecord(
     string LastSeenUserName,
     DateTimeOffset LastSeenTime,
     IPAddress LastSeenAddress,
-    ImmutableArray<byte>? HWId,
+    ImmutableTypedHwid? HWId,
     ImmutableArray<byte>? PublicKey);
 
 public sealed record RoundRecord(int Id, DateTimeOffset? StartDate, ServerRecord Server);

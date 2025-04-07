@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Content.Server.Administration.Notes;
 using Content.Server.Connection;
 using Content.Server.Database;
+using Content.Shared.Database;
 using Content.Shared.CCVar;
 using Robust.Shared.AuthLib;
 using Robust.Shared.Configuration;
@@ -28,8 +29,14 @@ public sealed class UserDataAssociation : IServerUserDataAssociation, IPostInjec
     private ISawmill _logger = default!;
 
     public async Task<AssociationResult> AttemptUserDataFromPublicKey(
-        ImmutableArray<byte> publicKey, ImmutableArray<byte> hWId, string requestedUserName, IPAddress connectingAddress)
+        ImmutableArray<byte> publicKey, ImmutableArray<byte> legacyHwid, string requestedUserName, IPAddress connectingAddress)
     {
+        // Wraps legacy ID into the newer format as required.  (Eventually would like everything to use this, but its
+        // defined in content, not engine currently...).
+        TypedHwid? typedHwid = null;
+        if (legacyHwid.Length > 0)
+            typedHwid = new ImmutableTypedHwid(legacyHwid, HwidType.Legacy);  // In future, should also update this to support modern IDs
+
         // Sanity check (unlikely a user can get this far without a publickey set, but just in case...)
         if (publicKey == null || publicKey.Length == 0)
         {
@@ -44,7 +51,7 @@ public sealed class UserDataAssociation : IServerUserDataAssociation, IPostInjec
             var userId = new NetUserId(existingPlayerRecord.UserId);
             var userData = new NetUserData(userId, existingPlayerRecord.LastSeenUserName) // (Currently does not allow user to change name.)
             {
-                HWId = hWId,
+                HWId = legacyHwid,
                 PublicKey = publicKey
             };
 
@@ -86,7 +93,7 @@ public sealed class UserDataAssociation : IServerUserDataAssociation, IPostInjec
         if (_cfg.GetCVar(CCVars.AuthMigrationViaHwid))
         {
             // Is there an old HWID known?
-            var matchingExistingPlayerRecord = await _db.GetPlayerRecordByHWID(hWId);
+            var matchingExistingPlayerRecord = await _db.GetPlayerRecordByHWID(typedHwid);
             if (matchingExistingPlayerRecord != null)
             {
                 // Has that HWID already been claimed by another public key?
@@ -111,7 +118,7 @@ public sealed class UserDataAssociation : IServerUserDataAssociation, IPostInjec
                         var userId = new NetUserId(matchingExistingPlayerRecord.UserId);
                         var userData = new NetUserData(userId, matchingExistingPlayerRecord.LastSeenUserName)
                         {
-                            HWId = hWId,
+                            HWId = legacyHwid,
                             PublicKey = publicKey
                         };
 
@@ -177,7 +184,7 @@ public sealed class UserDataAssociation : IServerUserDataAssociation, IPostInjec
             // This will create a new user in the database (no need for this function to manually do it)
             var userData = new NetUserData(userId, requestedUserName) // (Currently does not allow user to change name.)
             {
-                HWId = hWId,
+                HWId = legacyHwid,
                 PublicKey = publicKey
             };
             return new AssociationResult(true, userData);

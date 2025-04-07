@@ -91,7 +91,7 @@ internal sealed class KeySetCommand : IConsoleCommand
             Shared.Database.NoteType.Note, logMessage, Shared.Database.NoteSeverity.None, true, DateTime.Now.AddDays(DAYS_FOR_LOG));
 
         await _db.UpdatePlayerRecordAsync(player.UserId, player.LastSeenUserName, player.LastSeenAddress,
-            player.HWId.GetValueOrDefault(), keyBytes.Value);
+            player.HWId, keyBytes.Value);
 
         shell.WriteLine("Key updated.");
     }

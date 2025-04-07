@@ -27,8 +27,5 @@
     <ProjectReference Include="..\Content.Shared\Content.Shared.csproj" />
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Objectives\Interfaces\" />
-  </ItemGroup>
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
 </Project>

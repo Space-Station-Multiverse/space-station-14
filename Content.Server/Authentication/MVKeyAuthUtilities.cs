@@ -90,7 +90,7 @@ public sealed class MVKeyAuthUtilities : IPostInjectInit
             await _db.UpdatePlayerRecordAsync(sourceUsernameLookupRecord.UserId,
                 newUserName,
                 sourceUsernameLookupRecord.LastSeenAddress,
-                sourceUsernameLookupRecord.HWId ?? ImmutableArray<byte>.Empty,
+                sourceUsernameLookupRecord.HWId ?? null,
                 sourceUsernameLookupRecord.PublicKey ?? ImmutableArray<byte>.Empty);
         } catch (Exception e) {
             _logger.Error("Exception in AttemptRenameUser: ", e);
