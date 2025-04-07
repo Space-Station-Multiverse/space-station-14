@@ -137,7 +137,7 @@ namespace Content.Server.Connection
 
             var serverId = (await _serverDbEntry.ServerEntity).Id;
 
-            var hwid = e.UserData.GetModernHwid();
+            var hwid = e.UserData.GetBestHwid();
             var trust = e.UserData.Trust;
 
             if (deny != null)

@@ -135,7 +135,7 @@ namespace Content.Server.Administration
         {
             var userId = session.UserId;
             var address = session.Channel.RemoteEndPoint.Address;
-            var hwId = session.Channel.UserData.GetModernHwid();
+            var hwId = session.Channel.UserData.GetBestHwid();
             return new LocatedPlayerData(
                 userId,
                 address,
