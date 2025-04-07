@@ -12,7 +12,7 @@ internal static class Program
             ContentModulePrefix = "Content.",
             ContentBuildDirectory = "Content.Replay",
             DefaultWindowTitle = "SS14 Replay",
-            UserDataDirectoryName = "Space Station 14",
+            UserDataDirectoryName = "Space Station Multiverse",
             ConfigFileName = "replay.toml"
         });
     }
