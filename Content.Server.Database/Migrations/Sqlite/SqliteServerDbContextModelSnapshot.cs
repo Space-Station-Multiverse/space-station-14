@@ -741,8 +741,6 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                     b.HasIndex("LastSeenAddress");
 
-                    // b.HasIndex("LastSeenHWId");
-
                     b.HasIndex("LastSeenUserName");
 
                     b.HasIndex("PublicKey");
@@ -1666,6 +1664,8 @@ namespace Content.Server.Database.Migrations.Sqlite
                                 .HasColumnName("last_seen_hwid_type");
 
                             b1.HasKey("PlayerId");
+
+                            b1.HasIndex("Hwid");
 
                             b1.ToTable("player");
 

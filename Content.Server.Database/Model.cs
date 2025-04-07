@@ -192,9 +192,6 @@ namespace Content.Server.Database
             modelBuilder.Entity<Player>()
                 .HasIndex(p => p.PublicKey);
 
-            //modelBuilder.Entity<Player>()
-            //    .HasIndex(p => p.LastSeenHWId);
-
             modelBuilder.Entity<Player>()
                 .HasIndex(p => p.LastSeenAddress);
 
