@@ -728,8 +728,8 @@ namespace Content.Server.Database
             // Sort by descending last seen time.
             // So if player's machine played on multiple accounts, it picks the most recent one.
             var record = await db.DbContext.Player
-                .OrderByDescending(p => p.LastSeenHWId)
-                .FirstOrDefaultAsync(p => p.LastSeenHWId == hwID, cancel);
+                .FirstOrDefaultAsync(p => p.LastSeenHWId != null && p.LastSeenHWId.Hwid == hwID.Hwid && p.LastSeenHWId.Type == hwID.Type, cancel);
+                // (I don't love this because EF might writing a suboptimal SQL query (selecting all NOT NULL), but this check seems to be required for EF so...)
 
             return record == null ? null : MakePlayerRecord(record);
         }
