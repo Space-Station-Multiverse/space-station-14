@@ -10,7 +10,7 @@ Please also see [How to switch to MV Engine](https://spacestationmultiverse.com/
 
 1. Clone this repo:
 ```shell
-git clone https://github.com/space-wizards/space-station-14.git
+git clone https://github.com/Space-Station-Multiverse/space-station-14.git
 ```
 2. Go to the project folder and run `RUN_THIS.py` to initialize the submodules and load the engine:
 ```shell
