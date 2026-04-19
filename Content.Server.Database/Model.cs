@@ -291,6 +291,10 @@ namespace Content.Server.Database
                 .Property(p => p.Type)
                 .HasDefaultValue(HwidType.Legacy);
 
+            modelBuilder.Entity<Player>()
+                .OwnsOne(p => p.LastSeenHWId)
+                .HasIndex(p => p.Hwid);
+
             modelBuilder.Entity<ConnectionLog>()
                 .OwnsOne(p => p.HWId)
                 .Property(p => p.Hwid)

@@ -15,6 +15,7 @@ using System.Security.Cryptography;
 using Content.Server.Players.PlayTimeTracking;
 using Content.Shared.Players.PlayTimeTracking;
 using Content.Server.Administration.Notes;
+using System.Net;
 
 namespace Content.Server.Authentication;
 
@@ -90,7 +91,7 @@ internal sealed class KeySetCommand : IConsoleCommand
         await _adminNotes.AddAdminRemark(shell.Player ?? null, player.UserId,
             Shared.Database.NoteType.Note, logMessage, Shared.Database.NoteSeverity.None, true, DateTime.Now.AddDays(DAYS_FOR_LOG));
 
-        await _db.UpdatePlayerRecordAsync(player.UserId, player.LastSeenUserName, player.LastSeenAddress,
+        await _db.UpdatePlayerRecordAsync(player.UserId, player.LastSeenUserName, player.LastSeenAddress ?? IPAddress.None,
             player.HWId, keyBytes.Value);
 
         shell.WriteLine("Key updated.");

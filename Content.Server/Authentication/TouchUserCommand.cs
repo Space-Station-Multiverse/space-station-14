@@ -13,6 +13,7 @@ using Content.Server.Administration.Managers;
 using Content.Server.Administration.Notes;
 using Content.Server.Database;
 using System.Collections.Immutable;
+using System.Net;
 
 namespace Content.Server.Authentication;
 
@@ -52,7 +53,7 @@ internal sealed class TouchUserCommand : IConsoleCommand
         await _db.UpdatePlayerRecordAsync(
             sourceUsernameLookupRecord.UserId,
             sourceUsernameLookupRecord.LastSeenUserName,
-            sourceUsernameLookupRecord.LastSeenAddress,
+            sourceUsernameLookupRecord.LastSeenAddress ?? IPAddress.None,
             sourceUsernameLookupRecord.HWId ?? null,
             sourceUsernameLookupRecord.PublicKey ?? ImmutableArray<byte>.Empty);
 

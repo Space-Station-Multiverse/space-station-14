@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -89,7 +90,7 @@ public sealed class MVKeyAuthUtilities : IPostInjectInit
         {
             await _db.UpdatePlayerRecordAsync(sourceUsernameLookupRecord.UserId,
                 newUserName,
-                sourceUsernameLookupRecord.LastSeenAddress,
+                sourceUsernameLookupRecord.LastSeenAddress ?? IPAddress.None,
                 sourceUsernameLookupRecord.HWId ?? null,
                 sourceUsernameLookupRecord.PublicKey ?? ImmutableArray<byte>.Empty);
         } catch (Exception e) {

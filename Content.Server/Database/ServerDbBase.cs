@@ -660,7 +660,7 @@ namespace Content.Server.Database
                 // We don't have a record for this player in the database.
                 // This is possible, for example, when banning people that never connected to the server.
                 // Just return fallback data here, I guess.
-                return new PlayerRecord(new NetUserId(userId), default, userId.ToString(), default, null, null);
+                return new PlayerRecord(new NetUserId(userId), default, userId.ToString(), default, null, null, null);
             }
 
             return new PlayerRecord(
