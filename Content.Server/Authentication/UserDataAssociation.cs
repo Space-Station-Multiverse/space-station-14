@@ -29,7 +29,8 @@ public sealed class UserDataAssociation : IServerUserDataAssociation, IPostInjec
     private ISawmill _logger = default!;
 
     public async Task<AssociationResult> AttemptUserDataFromPublicKey(
-        ImmutableArray<byte> publicKey, ImmutableArray<byte> legacyHwid, string requestedUserName, IPAddress connectingAddress)
+        ImmutableArray<byte> publicKey, ImmutableArray<byte> legacyHwid, string requestedUserName,
+        IPAddress connectingAddress, bool isLocal)
     {
         // Wraps legacy ID into the newer format as required.  (Eventually would like everything to use this, but its
         // defined in content, not engine currently...).
@@ -52,7 +53,8 @@ public sealed class UserDataAssociation : IServerUserDataAssociation, IPostInjec
             var userData = new NetUserData(userId, existingPlayerRecord.LastSeenUserName) // (Currently does not allow user to change name.)
             {
                 HWId = legacyHwid,
-                PublicKey = publicKey
+                PublicKey = publicKey,
+                IsLocal = isLocal
             };
 
             return new AssociationResult(true, userData);
@@ -119,7 +121,8 @@ public sealed class UserDataAssociation : IServerUserDataAssociation, IPostInjec
                         var userData = new NetUserData(userId, matchingExistingPlayerRecord.LastSeenUserName)
                         {
                             HWId = legacyHwid,
-                            PublicKey = publicKey
+                            PublicKey = publicKey,
+                            IsLocal = isLocal
                         };
 
                         return new AssociationResult(true, userData);
@@ -185,7 +188,8 @@ public sealed class UserDataAssociation : IServerUserDataAssociation, IPostInjec
             var userData = new NetUserData(userId, requestedUserName) // (Currently does not allow user to change name.)
             {
                 HWId = legacyHwid,
-                PublicKey = publicKey
+                PublicKey = publicKey,
+                IsLocal = isLocal
             };
             return new AssociationResult(true, userData);
         }
